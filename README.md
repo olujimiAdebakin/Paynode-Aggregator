@@ -1,4 +1,4 @@
-# **Payflow - AI-Driven Payment Aggregator** 🚀
+# **PayNode - AI-Driven Payment Aggregator** 🚀
 
 ## Overview
 
@@ -139,7 +139,7 @@ cargo test
 | **ethers-rs**      | Ethereum client libraries for blockchain tasks  | [docs.rs/ethers](https://docs.rs/ethers)                        |
 | **Docker Compose** | Container orchestration for local development   | [docs.docker.com](https://docs.docker.com/compose/)             |
 
-# Payflow API
+# PayNode API
 
 ## Overview
 The PayNode API Gateway, built with Rust and the Axum framework, acts as the entry point for all client requests into the PayNode microservices ecosystem. It provides essential routing and health monitoring functionalities, ensuring system availability.
@@ -177,7 +177,7 @@ OK
 -   `500 Internal Server Error`: The service is not running or encountered an unexpected issue during startup.
 
 ## Contributing
-We welcome contributions to the Payflow project! To get started:
+We welcome contributions to the PayNode project! To get started:
 
 -   🌿 Fork the repository and create a new branch for your feature or bug fix.
 -   🛠️ Ensure your code adheres to existing coding standards and passes all tests.
