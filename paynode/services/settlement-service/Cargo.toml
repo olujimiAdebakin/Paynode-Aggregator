@@ -1,0 +1,13 @@
+[package]
+name = "settlement-service"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = { workspace = true }
+serde = { workspace = true }
+tracing = { workspace = true }
+anyhow = { workspace = true }
+dotenv = { workspace = true }
+ethers = "2.0"
+shared-types = { path = "../../shared/types" }

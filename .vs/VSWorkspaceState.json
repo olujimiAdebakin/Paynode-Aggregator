@@ -1,0 +1,11 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\paynode",
+    "\\paynode\\services",
+    "\\paynode\\services\\ai-router",
+    "\\paynode\\services\\ai-router\\src"
+  ],
+  "SelectedNode": "\\paynode\\services\\ai-router\\src\\main.rs",
+  "PreviewInSolutionExplorer": false
+}

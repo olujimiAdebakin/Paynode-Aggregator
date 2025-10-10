@@ -1,0 +1,16 @@
+[package]
+name = "balance-service"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = { workspace = true }
+redis = { workspace = true }
+sqlx = { workspace = true }
+serde = { workspace = true }
+rust_decimal = { workspace = true }
+tracing = { workspace = true }
+anyhow = { workspace = true }
+dotenv = { workspace = true }
+shared-types = { path = "../../shared/types" }
+shared-database = { path = "../../shared/database" }

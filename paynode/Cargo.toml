@@ -1,0 +1,35 @@
+[workspace]
+members = [
+    "services/api-gateway",
+    "services/order-service",
+    "services/ai-router",
+    "services/provider-service",
+    "services/balance-service",
+    "services/settlement-service",
+    "services/analytics-service",
+    "services/blockchain-indexer",
+    "shared/types",
+    "shared/database",
+    "shared/messaging",
+    "shared/utils",
+]
+
+resolver = "2"
+
+[workspace.dependencies]
+tokio = { version = "1.35", features = ["full"] }
+axum = "0.7"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+sqlx = { version = "0.7", features = ["runtime-tokio-rustls", "postgres", "uuid", "chrono", "decimal"] }
+redis = { version = "0.24", features = ["tokio-comp", "connection-manager"] }
+uuid = { version = "1.6", features = ["v4", "serde"] }
+chrono = { version = "0.4", features = ["serde"] }
+rust_decimal = "1.33"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+anyhow = "1.0"
+thiserror = "1.0"
+dotenv = "0.15"
+async-nats = "0.33"
+reqwest = { version = "0.11", features = ["json"] }
