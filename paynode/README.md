@@ -136,7 +136,7 @@ end
 
 classDef node fill:#1F2937,stroke:#10B981,color:#fff,stroke-width:1px;
 class A,B,C,D,E,F,G,H,I,J,K,L node;
-
+```
 
 Flow Summary
 
@@ -152,7 +152,7 @@ Settlement: Escrow releases funds upon success.
 
 Feedback Loop: AI updates provider performance scores.
 
-Latency: <200ms routing | Settlement: 1–2 minutes | Success Rate: >9
+Latency: <200ms routing | Settlement: 1–2 minutes | Success Rate: >90%
 
 
 🚀 What Other Aggregators Lack
