@@ -119,26 +119,25 @@ Paynode is an **AI-native, non-custodial, microservice-based payment aggregator*
 
 ### **AI-Driven Payment Routing Flow**
 
-```mermaid
-flowchart TD
+flowchart LR
 
-A[User / dApp] --> B[API Gateway]
-B --> C[Smart Contract Escrow]
-C --> D[Order Service]
-D --> E[NATS Message Bus]
+A["👤 Client<br/>Application"] --> B["🚪 API Gateway<br/>Request Validation"]
+B --> C["🔒 Smart Contract<br/>Escrow"]
+C --> D["📋 Order Service<br/>State Management"]
+D --> E["📨 Message Broker<br/>NATS Events"]
 
-E --> F[AI Router Service]
-F -->|Scores Providers| G[Provider Registry]
+E --> F["🤖 AI Router<br/>Provider Scoring"]
+F -->|Provider<br/>Metrics| G["📊 Provider<br/>Registry"]
 
-G -->|Best Match| H[Provider Service]
-H --> I[Payment Execution (PSP / Bank API)]
-I --> J[Settlement Service]
-J --> K[Blockchain Transaction (Base / Polygon)]
+G -->|Optimal<br/>Provider| H["💳 Payment<br/>Provider Service"]
+H --> I["🏦 Payment<br/>Gateway"]
+I --> J["⚙️ Settlement<br/>Service"]
+J --> K["⛓️ Blockchain<br/>Settlement"]
 
-K --> L[AI Feedback Loop]
-L --> F
+K --> L["📈 Analytics<br/>Engine"]
+L -.->|Model<br/>Training| F
 
-subgraph "Microservice Architecture"
+subgraph MS["🏗️ MICROSERVICES ARCHITECTURE"]
     D
     F
     G
@@ -146,9 +145,17 @@ subgraph "Microservice Architecture"
     J
 end
 
-classDef node fill:#1F2937,stroke:#10B981,color:#fff,stroke-width:1px;
-class A,B,C,D,E,F,G,H,I,J,K,L node;
-```
+classDef primary fill:#0F172A,stroke:#0EA5E9,color:#E0F2FE,stroke-width:3px;
+classDef secondary fill:#1E293B,stroke:#64748B,color:#CBD5E1,stroke-width:2px;
+classDef highlight fill:#0C4A6E,stroke:#0284C7,color:#BAE6FD,stroke-width:3px;
+classDef group fill:#1E1B4B,stroke:#6366F1,color:#E0E7FF,stroke-width:3px;
+
+class A,B,C,E primary;
+class D,F,G,H,J highlight;
+class I,K,L secondary;
+class MS group;
+
+
 
 Flow Summary
 
