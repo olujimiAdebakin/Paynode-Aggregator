@@ -143,6 +143,8 @@ class D,F,G,H,J highlight;
 class I,K,L secondary;
 class MS group;
 
+
+
 Flow Summary
 
 Order Creation: User creates a payment → Escrow locks funds.
