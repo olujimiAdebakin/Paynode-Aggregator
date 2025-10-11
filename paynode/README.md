@@ -14,28 +14,33 @@
 The global payment infrastructure — especially **crypto-to-fiat** and **cross-border** flows — is fundamentally broken.
 
 ### **1. Fragmented Liquidity**
-- Each provider (PSP, OTC, exchange) operates in isolation.  
-- Users manually compare rates → **inefficiency and poor pricing**.  
+
+- Each provider (PSP, OTC, exchange) operates in isolation.
+- Users manually compare rates → **inefficiency and poor pricing**.
 - No unified global liquidity layer.
 
 ### **2. Trust & Counterparty Risk**
-- Most payment aggregators are **custodial**.  
-- Users must trust middlemen (FTX, Celsius — ring a bell?).  
+
+- Most payment aggregators are **custodial**.
+- Users must trust middlemen (FTX, Celsius — ring a bell?).
 - No transparent on-chain audit or escrow logic.
 
 ### **3. Inefficient Routing**
-- Round-robin or static routing logic dominates the space.  
-- Provider downtime leads to failed transactions and poor UX.  
+
+- Round-robin or static routing logic dominates the space.
+- Provider downtime leads to failed transactions and poor UX.
 - No AI scoring, no dynamic selection.
 
 ### **4. Scalability Bottlenecks**
-- Monolithic systems choke under volume.  
-- Queues, locks, and race conditions everywhere.  
+
+- Monolithic systems choke under volume.
+- Queues, locks, and race conditions everywhere.
 - Throughput doesn’t scale linearly — it collapses exponentially under load.
 
 ### **5. Geographic Blind Spots**
-- Limited support for Africa, LATAM, and SEA.  
-- Local rails (M-Pesa, Opay, Flutterwave, wallets) are ignored.  
+
+- Limited support for Africa, LATAM, and SEA.
+- Local rails (M-Pesa, Opay, Flutterwave, wallets) are ignored.
 - Billions remain excluded or underserved.
 
 ---
@@ -44,36 +49,41 @@ The global payment infrastructure — especially **crypto-to-fiat** and **cross-
 
 Paynode is an **AI-native, non-custodial, microservice-based payment aggregator** built to make global settlements fast, intelligent, and trustless.
 
-> **Mission:** Build the *TCP/IP layer* for global money — composable, autonomous, and infinitely scalable.
+> **Mission:** Build the _TCP/IP layer_ for global money — composable, autonomous, and infinitely scalable.
 
 ---
 
 ## ⚙️ How Paynode Solves It
 
 ### **1. Unified Liquidity Layer**
-- Aggregates thousands of PSPs, OTC desks, and local agents globally.  
-- Single API access for global liquidity discovery.  
+
+- Aggregates thousands of PSPs, OTC desks, and local agents globally.
+- Single API access for global liquidity discovery.
 - Currency-based sharding (e.g., `NGN`, `KES`, `USD`) ensures local optimization.
 
 ### **2. Non-Custodial Architecture**
-- Funds locked in **smart contract escrow** — never held by Paynode.  
-- Transparent, trustless, and verifiable settlement.  
+
+- Funds locked in **smart contract escrow** — never held by Paynode.
+- Transparent, trustless, and verifiable settlement.
 - Zero counterparty risk.
 
 ### **3. AI-Powered Routing**
-- AI analyzes 30+ provider metrics (success rate, speed, cost, uptime, balance ratio).  
-- Scores providers dynamically and routes to the **best possible match**.  
+
+- AI analyzes 30+ provider metrics (success rate, speed, cost, uptime, balance ratio).
+- Scores providers dynamically and routes to the **best possible match**.
 - Learns from every transaction — self-optimizing routing engine.
 
 ### **4. Horizontal Scalability via Microservices**
-- Each currency/region is an independent **shard** (Rust microservice).  
-- Uses **NATS** for async message passing and **Redis Sorted Sets** for O(log n) routing lookups.  
-- Scales linearly — more shards = more capacity.  
+
+- Each currency/region is an independent **shard** (Rust microservice).
+- Uses **NATS** for async message passing and **Redis Sorted Sets** for O(log n) routing lookups.
+- Scales linearly — more shards = more capacity.
 - Handles **100,000+ concurrent users** and **10,000+ TPS**.
 
 ### **5. Real-Time Feedback Loop**
-- Tracks provider success rates, latency, and availability live.  
-- AI model retrains continuously for predictive routing.  
+
+- Tracks provider success rates, latency, and availability live.
+- AI model retrains continuously for predictive routing.
 - Proactively avoids underperforming providers — minimizing failed orders.
 
 ---
@@ -82,23 +92,25 @@ Paynode is an **AI-native, non-custodial, microservice-based payment aggregator*
 
 **Paycrest.xyz** is a solid aggregator but built on **static routing logic and monolithic architecture** — not scalable for the next billion users.
 
-| Category | Paycrest.xyz | **Paynode Advantage** |
-|-----------|---------------|----------------------|
-| Routing | Round-robin / first-fit (O(n)) | **AI Scored Routing** (O(log n) + learning) |
-| Scalability | Centralized server bottlenecks | Fully distributed microservices |
-| State Management | Shared Redis queues | Decoupled event-driven (NATS) |
-| Adaptability | Static configs | Real-time self-learning |
-| AI Layer | None | Built-in inference layer |
-| Failure Handling | Retry → Cancel | Predictive routing + auto-failover |
+| Category         | Paycrest.xyz                   | **Paynode Advantage**                       |
+| ---------------- | ------------------------------ | ------------------------------------------- |
+| Routing          | Round-robin / first-fit (O(n)) | **AI Scored Routing** (O(log n) + learning) |
+| Scalability      | Centralized server bottlenecks | Fully distributed microservices             |
+| State Management | Shared Redis queues            | Decoupled event-driven (NATS)               |
+| Adaptability     | Static configs                 | Real-time self-learning                     |
+| AI Layer         | None                           | Built-in inference layer                    |
+| Failure Handling | Retry → Cancel                 | Predictive routing + auto-failover          |
 
 ### **Why It Fails at Scale**
-- A single queue + monolith = **performance cliff**.  
-- “First-fit” logic overloads certain providers while others idle.  
-- Race conditions cause dropped or duplicated orders.  
 
-**Paynode**, by contrast, scales horizontally and intelligently:  
-- AI-based routing balances load dynamically.  
-- Microservices isolate failure domains.  
+- A single queue + monolith = **performance cliff**.
+- “First-fit” logic overloads certain providers while others idle.
+- Race conditions cause dropped or duplicated orders.
+
+**Paynode**, by contrast, scales horizontally and intelligently:
+
+- AI-based routing balances load dynamically.
+- Microservices isolate failure domains.
 - Predictive selection ensures uptime under unpredictable conditions.
 
 ---
@@ -154,7 +166,6 @@ Feedback Loop: AI updates provider performance scores.
 
 Latency: <200ms routing | Settlement: 1–2 minutes | Success Rate: >90%
 
-
 🚀 What Other Aggregators Lack
 
 | Feature       | Traditional Aggregators | **Paynode**                        |
@@ -166,7 +177,6 @@ Latency: <200ms routing | Settlement: 1–2 minutes | Success Rate: >90%
 | Latency       | Seconds–Minutes         | <100ms Routing Decisions           |
 | Coverage      | Limited                 | 50+ Currencies, 100+ Countries     |
 | Resilience    | Centralized             | Distributed + Fault-tolerant       |
-
 
 🧱 Tech Stack
 
@@ -184,7 +194,6 @@ DB: PostgreSQL
 
 Blockchain: Base for escrow & settlement
 
-
 Environment Variables
 
 | Variable        | Description                  |
@@ -195,31 +204,26 @@ Environment Variables
 | `AI_ROUTER_URL` | Internal AI scoring endpoint |
 | `CHAIN_RPC_URL` | Blockchain RPC endpoint      |
 
-
-
-
 📈 Roadmap
 
- Node.js & Rust SDKs
+Node.js & Rust SDKs
 
- Provider Reputation Dashboard
+Provider Reputation Dashboard
 
- AI Routing API (public)
+AI Routing API (public)
 
- Decentralized Governance Layer
+Decentralized Governance Layer
 
- Multi-chain Escrow Expansion
+Multi-chain Escrow Expansion
 
-
- 🪙 License
+🪙 License
 
 MIT License © Olujimi Adebakin
-
 
 🌐 Learn More
 
 Docs: paynode.dev/docs
- (coming soon)
+(coming soon)
 
 Follow the Vision: @olujimi_the_dev
 

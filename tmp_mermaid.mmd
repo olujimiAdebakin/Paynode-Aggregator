@@ -1,0 +1,28 @@
+flowchart TD
+
+A[User / dApp] --> B[API Gateway]
+B --> C[Smart Contract Escrow]
+C --> D[Order Service]
+D --> E[NATS Message Bus]
+
+E --> F[AI Router Service]
+F -->|Scores Providers| G[Provider Registry]
+
+G -->|Best Match| H[Provider Service]
+H --> I[Payment Execution (PSP / Bank API)]
+I --> J[Settlement Service]
+J --> K[Blockchain Transaction (Base / Polygon)]
+
+K --> L[AI Feedback Loop]
+L --> F
+
+subgraph "Microservice Architecture"
+    D
+    F
+    G
+    H
+    J
+end
+
+classDef node fill:#1F2937,stroke:#10B981,color:#fff,stroke-width:1px;
+class A,B,C,D,E,F,G,H,I,J,K,L node;
