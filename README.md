@@ -77,7 +77,7 @@ Paynode is an **AI-native, non-custodial, microservice-based payment aggregator*
 ---
 
 
-**Paycrest.xyz** is a solid aggregator but built on **static routing logic and monolithic architecture** — not scalable for the next billion users.
+**Paycrest.io** is a solid aggregator but built on **static routing logic and monolithic architecture** — not scalable for the next billion users.
 
 | Category | Paycrest.xyz | **Paynode Advantage** |
 |-----------|---------------|----------------------|
