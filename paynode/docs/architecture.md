@@ -19,7 +19,7 @@ Each service performs a single responsibility and communicates via events, ensur
 - REST / GraphQL for clients.  
 - Publishes `order.created` event to NATS.  
 
-**Tech:** Actix Web + JWT Auth + OpenAPI spec.
+**Tech:** Axum + JWT Auth + Gemini AI spec.
 
 ---
 

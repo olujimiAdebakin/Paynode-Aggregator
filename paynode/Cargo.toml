@@ -1,5 +1,6 @@
 [workspace]
 members = [
+    # ─── Service Crates ──────────────────────────────────────────────
     "services/api-gateway",
     "services/order-service",
     "services/ai-router",
@@ -8,28 +9,56 @@ members = [
     "services/settlement-service",
     "services/analytics-service",
     "services/blockchain-indexer",
+
+    # ─── Shared Crates ───────────────────────────────────────────────
     "shared/types",
     "shared/database",
     "shared/messaging",
     "shared/utils",
 ]
 
+# Use the new Cargo feature resolver for more consistent dependency resolution
 resolver = "2"
 
 [workspace.dependencies]
+# ─── Core Async & Runtime ───────────────────────────────────────────
 tokio = { version = "1.35", features = ["full"] }
+
+# ─── Web Framework & Routing ────────────────────────────────────────
 axum = "0.7"
+
+# ─── Serialization / Deserialization ────────────────────────────────
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-sqlx = { version = "0.7", features = ["runtime-tokio-rustls", "postgres", "uuid", "chrono", "decimal"] }
+
+# ─── Database & SQL Abstraction ─────────────────────────────────────
+# sqlx 0.7.x no longer supports `rust-decimal` directly,
+# so we use the companion crate `sqlx-rust-decimal` instead.
+sqlx = { version = "0.7", features = ["runtime-tokio-rustls", "postgres", "uuid", "chrono"] }
+sqlx-rust-decimal = "0.7"
+rust_decimal = "1.33"
+
+# ─── Caching & Message Queue ────────────────────────────────────────
+# Redis async client with connection pool management.
 redis = { version = "0.24", features = ["tokio-comp", "connection-manager"] }
+
+# ─── Common Data Types ──────────────────────────────────────────────
 uuid = { version = "1.6", features = ["v4", "serde"] }
 chrono = { version = "0.4", features = ["serde"] }
-rust_decimal = "1.33"
+
+# ─── Observability & Logging ────────────────────────────────────────
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# ─── Error Handling ─────────────────────────────────────────────────
 anyhow = "1.0"
 thiserror = "1.0"
+
+# ─── Environment Management ─────────────────────────────────────────
 dotenv = "0.15"
+
+# ─── Messaging (NATS) ──────────────────────────────────────────────
 async-nats = "0.33"
+
+# ─── External HTTP Requests ─────────────────────────────────────────
 reqwest = { version = "0.11", features = ["json"] }
