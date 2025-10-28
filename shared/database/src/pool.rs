@@ -14,9 +14,13 @@ pub struct DatabaseConfig {
 
 impl Default for DatabaseConfig {
     fn default() -> Self {
+        // Load environment variables from .env file
+        // This ensures DATABASE_URL is loaded before we try to use it
+        let _ = dotenvy::dotenv();
+        
         Self {
             url: std::env::var("DATABASE_URL")
-                .unwrap_or_else(|_| "postgresql://postgres:postgres@localhost:5432/paynode".to_string()),
+                .expect("DATABASE_URL must be set in .env file or environment"),
             max_connections: 10,
             min_connections: 2,
             connect_timeout: Duration::from_secs(30),
@@ -25,9 +29,47 @@ impl Default for DatabaseConfig {
     }
 }
 
+/// Load database configuration from environment variables
+/// Provides more explicit control than using Default trait
+pub fn load_database_config() -> Result<DatabaseConfig> {
+    // Load .env file if it exists (optional, but recommended)
+    dotenvy::dotenv().ok();
+    
+    let database_url = std::env::var("DATABASE_URL")
+        .map_err(|_| DatabaseError::ConfigError("DATABASE_URL must be set in .env file or environment".to_string()))?;
+    
+    Ok(DatabaseConfig {
+        url: database_url,
+        max_connections: std::env::var("DATABASE_MAX_CONNECTIONS")
+            .ok()
+            .and_then(|v| v.parse().ok())
+            .unwrap_or(10),
+        min_connections: std::env::var("DATABASE_MIN_CONNECTIONS")
+            .ok()
+            .and_then(|v| v.parse().ok())
+            .unwrap_or(2),
+        connect_timeout: Duration::from_secs(
+            std::env::var("DATABASE_CONNECT_TIMEOUT_SECS")
+                .ok()
+                .and_then(|v| v.parse().ok())
+                .unwrap_or(30)
+        ),
+        idle_timeout: Duration::from_secs(
+            std::env::var("DATABASE_IDLE_TIMEOUT_SECS")
+                .ok()
+                .and_then(|v| v.parse().ok())
+                .unwrap_or(600)
+        ),
+    })
+}
+
 /// Creates a PostgreSQL connection pool
 pub async fn create_pool(config: DatabaseConfig) -> Result<PgPool> {
-    tracing::info!("Creating database pool with max_connections={}", config.max_connections);
+    tracing::info!(
+        "Creating database pool for {} with max_connections={}", 
+        config.url, 
+        config.max_connections
+    );
     
     let pool = PgPoolOptions::new()
         .max_connections(config.max_connections)
@@ -37,7 +79,7 @@ pub async fn create_pool(config: DatabaseConfig) -> Result<PgPool> {
         .connect(&config.url)
         .await
         .map_err(|e| {
-            tracing::error!("Failed to connect to database: {}", e);
+            tracing::error!("Failed to connect to database at {}: {}", config.url, e);
             DatabaseError::ConnectionError(e)
         })?;
     
@@ -46,8 +88,16 @@ pub async fn create_pool(config: DatabaseConfig) -> Result<PgPool> {
 }
 
 /// Creates a pool with default configuration
+/// Uses DATABASE_URL from environment variables
 pub async fn create_default_pool() -> Result<PgPool> {
     create_pool(DatabaseConfig::default()).await
+}
+
+/// Creates a pool with explicit configuration loading
+/// Recommended for production use
+pub async fn create_pool_from_env() -> Result<PgPool> {
+    let config = load_database_config()?;
+    create_pool(config).await
 }
 
 /// Run database migrations
@@ -74,6 +124,15 @@ pub async fn check_connection(pool: &PgPool) -> Result<()> {
         .map_err(DatabaseError::ConnectionError)?;
     
     Ok(())
+}
+
+/// Initialize database with connection, migrations, and health check
+/// This is the main entry point for database setup
+pub async fn initialize_database() -> Result<PgPool> {
+    let pool = create_pool_from_env().await?;
+    run_migrations(&pool).await?;
+    check_connection(&pool).await?;
+    Ok(pool)
 }
 
 #[cfg(test)]

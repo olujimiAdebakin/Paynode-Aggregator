@@ -17,7 +17,7 @@ impl OrderRepository {
             r#"
             INSERT INTO orders (
                 order_id, user_address, token, amount, 
-                refund_address, integrator, status, tier, 
+                refund_address, integrator_address, status, tier, 
                 currency, block_number, tx_hash, created_at, expires_at
             ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
             RETURNING id
@@ -27,7 +27,7 @@ impl OrderRepository {
             order.token,
             order.amount,
             order.refund_address,
-            order.integrator,
+            order.integrator_address,
             order.status,
             order.tier,
             order.currency,
@@ -49,7 +49,7 @@ impl OrderRepository {
             r#"
             SELECT 
                 id, order_id, user_address, token, amount,
-                refund_address, integrator, status, tier, currency,
+                refund_address, integrator_address, status, tier, currency,
                 block_number, tx_hash, created_at, expires_at, updated_at
             FROM orders
             WHERE order_id = $1
@@ -69,7 +69,7 @@ impl OrderRepository {
             r#"
             SELECT 
                 id, order_id, user_address, token, amount,
-                refund_address, integrator, status, tier, currency,
+                refund_address, integrator_address, status, tier, currency,
                 block_number, tx_hash, created_at, expires_at, updated_at
             FROM orders
             WHERE status = 'PENDING'
@@ -84,20 +84,20 @@ impl OrderRepository {
     
     /// Update order status
     pub async fn update_status(&self, order_id: &[u8], new_status: &str) -> Result<()> {
-        sqlx::query!(
-            r#"
-            UPDATE orders
-            SET status = $1, updated_at = NOW()
-            WHERE order_id = $2
-            "#,
-            new_status,
-            order_id
-        )
-        .execute(&self.pool)
-        .await?;
-        
-        Ok(())
-    }
+    sqlx::query!(
+        r#"
+        UPDATE orders
+        SET status = $1::order_status, updated_at = NOW()
+        WHERE order_id = $2
+        "#,
+        new_status,
+        order_id
+    )
+    .execute(&self.pool)
+    .await?;
+    
+    Ok(())
+}
     
     /// Get expired orders
     pub async fn get_expired_orders(&self) -> Result<Vec<OrderModel>> {
@@ -106,7 +106,7 @@ impl OrderRepository {
             r#"
             SELECT 
                 id, order_id, user_address, token, amount,
-                refund_address, integrator, status, tier, currency,
+                refund_address, integrator_address, status, tier, currency,
                 block_number, tx_hash, created_at, expires_at, updated_at
             FROM orders
             WHERE status = 'PENDING'

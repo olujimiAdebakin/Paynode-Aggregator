@@ -36,19 +36,21 @@ impl ProposalRepository {
     }
     
     /// Update proposal status
-    pub async fn update_status(&self, proposal_id: &[u8], new_status: &str) -> Result<()> {
-        sqlx::query!(
-            r#"
-            UPDATE proposals
-            SET status = $1
-            WHERE proposal_id = $2
-            "#,
-            new_status,
-            proposal_id
-        )
-        .execute(&self.pool)
-        .await?;
-        
-        Ok(())
-    }
+   pub async fn update_status(&self, proposal_id: &[u8], new_status: &str) -> Result<()> {
+    sqlx::query!(
+        r#"
+        UPDATE proposals
+        SET status = $1::proposal_status
+        WHERE proposal_id = $2
+        "#,
+        new_status,
+        proposal_id
+    )
+    .execute(&self.pool)
+    .await?;
+    
+    Ok(())
+}
+
+
 }
