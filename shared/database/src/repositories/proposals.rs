@@ -18,14 +18,14 @@ impl ProposalRepository {
             INSERT INTO proposals (
                 proposal_id, order_id, provider, proposed_fee_bps,
                 status, created_at, deadline
-            ) VALUES ($1, $2, $3, $4, $5, $6, $7)
+            ) VALUES ($1, $2, $3, $4, $5::proposal_status, $6, $7)
             RETURNING id
             "#,
             proposal.proposal_id,
             proposal.order_id,
             proposal.provider,
             proposal.proposed_fee_bps,
-            proposal.status,
+            proposal.status.as_str(),
             proposal.created_at,
             proposal.deadline
         )
@@ -43,8 +43,8 @@ impl ProposalRepository {
         SET status = $1::proposal_status
         WHERE proposal_id = $2
         "#,
-        new_status,
-        proposal_id
+        .bind(new_status),
+        .bind(proposal_id)
     )
     .execute(&self.pool)
     .await?;

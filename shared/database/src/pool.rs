@@ -1,4 +1,4 @@
-use sqlx::postgres::{PgPool, PgPoolOptions};
+use sqlx::postgres::{PgPool, PgPoolOptions, PgConnectOptions};
 use std::time::Duration;
 use crate::error::{DatabaseError, Result};
 
@@ -15,16 +15,16 @@ pub struct DatabaseConfig {
 impl Default for DatabaseConfig {
     fn default() -> Self {
         // Load environment variables from .env file
-        // This ensures DATABASE_URL is loaded before we try to use it
+        // This ensures DATABASE_URL is loaded before i try to use it
         let _ = dotenvy::dotenv();
         
         Self {
             url: std::env::var("DATABASE_URL")
                 .expect("DATABASE_URL must be set in .env file or environment"),
-            max_connections: 10,
-            min_connections: 2,
-            connect_timeout: Duration::from_secs(30),
-            idle_timeout: Duration::from_secs(600),
+            max_connections: 5,
+            min_connections: 1,
+            connect_timeout: Duration::from_secs(10),
+            idle_timeout: Duration::from_secs(300),
         }
     }
 }
@@ -71,19 +71,31 @@ pub async fn create_pool(config: DatabaseConfig) -> Result<PgPool> {
         config.max_connections
     );
     
+    // Parse connection options and disable prepared statement cache
+    let connect_options = config.url
+        .parse::<PgConnectOptions>()
+        .map_err(|e| {
+            tracing::error!("Failed to parse database URL: {}", e);
+            DatabaseError::ConfigError(format!("Invalid database URL: {}", e))
+        })?
+        .statement_cache_capacity(0);  // Disable prepared statements globally
+    
     let pool = PgPoolOptions::new()
         .max_connections(config.max_connections)
         .min_connections(config.min_connections)
         .acquire_timeout(config.connect_timeout)
         .idle_timeout(config.idle_timeout)
-        .connect(&config.url)
+        
+        .max_lifetime(Some(Duration::from_secs(1800)))  // Close connections after 30 min
+        .test_before_acquire(true)  // CRITICAL for Neon - test connection health
+        .connect_with(connect_options)  // Using connect_with instead of connect
         .await
         .map_err(|e| {
             tracing::error!("Failed to connect to database at {}: {}", config.url, e);
             DatabaseError::ConnectionError(e)
         })?;
     
-    tracing::info!("Database pool created successfully");
+    tracing::info!("Database pool created successfully with prepared statements disabled");
     Ok(pool)
 }
 
